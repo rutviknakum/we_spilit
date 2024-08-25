@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "890051186716",
+    "project_id": "we-split-16604",
+    "storage_bucket": "we-split-16604.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:890051186716:android:79be62661a63d719f30fd9",
+        "android_client_info": {
+          "package_name": "com.example.we_spilit"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDqwfg-pUwBImiZVqMJOXa9h_hQbpmT2dQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
