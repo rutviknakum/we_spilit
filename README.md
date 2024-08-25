@@ -34,7 +34,7 @@ Based on the information from the project report, here is a sample README file f
 
 1. Clone the repository:
     ```bash
-    git clone https://github.com/yourusername/wesplit.git
+    git clone https://github.com/rutviknakum/we_spilit.git
     cd wesplit
     ```
 
