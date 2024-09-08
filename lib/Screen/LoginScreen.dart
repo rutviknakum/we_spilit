@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:we_spilit/Screen/CreateAccount.dart';
+import 'package:we_spilit/Screen/ForgotPasswordScreen.dart';
 import 'package:we_spilit/provider/auth_provider.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -154,12 +155,12 @@ class _LoginScreenState extends State<LoginScreen> {
                               alignment: Alignment.centerRight,
                               child: TextButton(
                                 onPressed: () {
-                                  if (emailController.text.isNotEmpty) {
-                                    context
-                                        .read<AuthenticateProvider>()
-                                        .resetPassword(
-                                            email: emailController.text);
-                                  }
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) =>
+                                            const ForgotPasswordScreen()),
+                                  );
                                 },
                                 child: const Text(
                                   'Forgot password?',
