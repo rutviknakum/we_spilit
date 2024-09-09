@@ -14,11 +14,11 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final double horizontalPadding = screenWidth * 0.05; // 5% of screen width
-    final double verticalPadding = screenHeight * 0.02; // 2% of screen height
-    final double buttonFontSize = screenWidth * 0.04; // 4% of screen width
-    final double titleFontSize = screenWidth * 0.05; // 5% of screen width
-    final double subtitleFontSize = screenWidth * 0.04; // 4% of screen width
+    final double horizontalPadding = screenWidth * 0.05;
+    final double verticalPadding = screenHeight * 0.02;
+    final double buttonFontSize = screenWidth * 0.04;
+    final double titleFontSize = screenWidth * 0.05;
+    final double subtitleFontSize = screenWidth * 0.04;
 
     return Scaffold(
       body: Stack(
@@ -30,7 +30,7 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
           ),
           Column(
             children: [
-              SizedBox(height: verticalPadding * 2), // Adjust top padding
+              SizedBox(height: verticalPadding * 2),
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: horizontalPadding),
                 child: Row(
@@ -128,6 +128,9 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
                                     'Members: ${expense.members} | Amount: ₹${divideAmount(expense.amount!, expense.members!)}',
                                     style:
                                         TextStyle(fontSize: subtitleFontSize)),
+                                onTap: () {
+                                  _showExpenseDetailsPopup(context, expense);
+                                },
                               ),
                             );
                           },
@@ -138,6 +141,61 @@ class _ExpensesScreenState extends State<ExpensesScreen> {
           ),
         ],
       ),
+    );
+  }
+
+  // This method shows the popup with expense details
+  void _showExpenseDetailsPopup(BuildContext context, expense) {
+    final screenWidth = MediaQuery.of(context).size.width;
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            joinString(expense.fName, expense.lName),
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: screenWidth * 0.05,
+            ),
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text('Amount: ₹${expense.amount}'),
+              Text('Members: ${expense.members}'),
+              SizedBox(height: 10),
+              Text('Description: ${expense.description}'),
+              SizedBox(height: 20),
+              // Red line and "Paid by"
+              Divider(color: Colors.red, thickness: 1),
+              Text(
+                'Paid by ${joinString(expense.fName, expense.lName)}',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontWeight: FontWeight.bold,
+                  fontSize: screenWidth * 0.045,
+                ),
+              ),
+            ],
+          ),
+          actions: <Widget>[
+            TextButton(
+              child: Text(
+                'Close',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: screenWidth * 0.045,
+                ),
+              ),
+              onPressed: () {
+                Navigator.of(context).pop(); // Close dialog
+              },
+            ),
+          ],
+        );
+      },
     );
   }
 }
