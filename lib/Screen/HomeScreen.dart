@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:we_spilit/Screen/CreateFriendScreen.dart';
 import 'package:we_spilit/common/helper/helper.dart';
+import 'package:we_spilit/model/friend_model.dart';
 import 'package:we_spilit/provider/friends_provider.dart';
 
 class Friend {
@@ -90,6 +91,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       itemCount: provider.getFriend().length,
                       itemBuilder: (context, index) {
                         final friend = provider.getFriend()[index];
+
                         return Dismissible(
                           key: Key(DateTime.now().microsecond.toString()),
                           direction: DismissDirection.endToStart,
@@ -155,7 +157,7 @@ class _HomeScreenState extends State<HomeScreen> {
                             trailing: IconButton(
                               icon: const Icon(Icons.qr_code),
                               onPressed: () {
-                                // _showFriendDetailsDialog(context, friend);
+                                _showFriendDetailsDialog(context, friend);
                               },
                             ),
                           ),
@@ -172,23 +174,23 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  void _showFriendDetailsDialog(BuildContext context, Friend friend) {
+  void _showFriendDetailsDialog(
+      BuildContext context, FriendsModel friendModel) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text('${friend.firstName} ${friend.lastName}'),
+          title: Text('${friendModel.fName} ${friendModel.lName}'),
           content: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              Image.network(
-                friend.googlePayBarcode,
-                width: 100,
-                height: 100,
+              Image.asset(
+                'asset/qr.jpeg',
+                fit: BoxFit.cover,
               ),
-              const SizedBox(height: 20),
+              SizedBox(height: 20),
               Text(
-                  'Shared Expenses: \$${friend.sharedExpenses.toStringAsFixed(2)}'),
+                  'Shared Expenses: \$${friendModel.amount?.toStringAsFixed(2) ?? "0.00"}'),
             ],
           ),
           actions: <Widget>[

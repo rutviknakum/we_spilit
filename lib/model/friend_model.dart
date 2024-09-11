@@ -25,16 +25,18 @@ class FriendsModel {
 
   factory FriendsModel.fromJson(Map<String, dynamic> json) => FriendsModel(
         fId: json["fId"],
-    userId: json["userId"],
+        userId: json["userId"],
         fName: json["fName"],
         lName: json["lName"],
         fPhoneNumber: json["fPhoneNumber"],
-    description: json["description"] as String?,
+        description: json["description"] as String?,
         amount: json["amount"] as int?,
-    members: json["members"] as int?,
-    isExpenseDelete: json["isExpenseDelete"] as bool,
-    isFriendsDelete: json["isFriendsDelete"] as bool,
+        members: json["members"] as int?,
+        isExpenseDelete: json["isExpenseDelete"] as bool,
+        isFriendsDelete: json["isFriendsDelete"] as bool,
       );
+
+  get googlePayBarcode => null;
 
   Map<String, dynamic> toJson() => {
         "fId": fId,
