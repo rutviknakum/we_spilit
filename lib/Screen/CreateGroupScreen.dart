@@ -13,6 +13,7 @@ class CreateGroupScreen extends StatefulWidget {
 class _CreateGroupScreenState extends State<CreateGroupScreen> {
   final groupName = TextEditingController();
   String? type;
+  List<String> selectedFriends = [];
 
   @override
   Widget build(BuildContext context) {
@@ -20,26 +21,21 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       body: Stack(
         fit: StackFit.expand,
         children: [
-          // Background image
           Image.asset(
-            'asset/background.jpeg', // Update with your image path
+            'asset/background.jpeg',
             fit: BoxFit.cover,
           ),
-          // Content on top of the background
           SingleChildScrollView(
             child: Padding(
               padding: const EdgeInsets.all(14.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Container to adjust the position of the Row with back icon, title, and buttons
                   Container(
-                    padding:
-                        const EdgeInsets.only(top: 40.0), // Adjust top padding
+                    padding: const EdgeInsets.only(top: 40.0),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        // Back button
                         IconButton(
                           icon: const Icon(Icons.arrow_back,
                               color: Colors.black, size: 24),
@@ -47,7 +43,6 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             _showCancelConfirmationDialog(context);
                           },
                         ),
-                        // Title
                         const Text(
                           'Create Group',
                           style: TextStyle(
@@ -56,32 +51,17 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             fontSize: 24,
                           ),
                         ),
-                        // Save button
-                        // TextButton(
-                        //   onPressed: () {
-                        //     _showSaveConfirmationDialog(context);
-                        //   },
-                        //   child: const Text(
-                        //     'Save',
-                        //     style: TextStyle(
-                        //         color: Colors.black,
-                        //         fontSize: 18,
-                        //         fontWeight: FontWeight.bold),
-                        //   ),
-                        // ),
                       ],
                     ),
                   ),
                   const SizedBox(height: 30),
-                  // Group name field
                   TextField(
                     controller: groupName,
                     decoration: const InputDecoration(
                       labelText: 'Group name',
                       prefixIcon: Icon(Icons.group_outlined),
                       filled: true,
-                      fillColor: Colors
-                          .white, // Optional: To ensure text field is visible
+                      fillColor: Colors.white,
                     ),
                   ),
                   const SizedBox(height: 30),
@@ -90,11 +70,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                     style: TextStyle(
                       fontSize: 18,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black, // Adjust color if needed
+                      color: Colors.black,
                     ),
                   ),
                   const SizedBox(height: 30),
-                  // Buttons
                   Column(
                     children: [
                       Row(
@@ -110,8 +89,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                               type = 'Trip';
                             });
                           }),
-                          _buildElevatedButton(Icons.person_2_outlined, 'Friend',
-                              () {
+                          _buildElevatedButton(
+                              Icons.person_2_outlined, 'Friend', () {
                             setState(() {
                               type = 'Friend';
                             });
@@ -127,7 +106,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                               type = 'Foodiee';
                             });
                           }),
-                          _buildElevatedButton(Icons.person_4_sharp, 'Buddy', () {
+                          _buildElevatedButton(Icons.person_4_sharp, 'Buddy',
+                              () {
                             setState(() {
                               type = 'Buddy';
                             });
@@ -153,12 +133,47 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                       ),
                     ],
                   ),
-                  if(type != null)...{
+                  if (type != null) ...{
                     const SizedBox(height: 30),
                     Align(child: Text('Type : ${type}')),
                   },
                   const SizedBox(height: 30),
-                  // Add Group button
+                  const Text(
+                    'Select Friends',
+                    style: TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Consumer<FriendsProvider>(
+                    builder: (context, provider, child) {
+                      if (provider.getFriend().isEmpty) {
+                        return const Center(
+                          child: Text('No friends available.'),
+                        );
+                      }
+                      return Column(
+                        children: provider.getFriend().map((friend) {
+                          return CheckboxListTile(
+                            title: Text('${friend.fName} ${friend.lName}'),
+                            value: selectedFriends.contains(friend.fId),
+                            onChanged: (bool? value) {
+                              setState(() {
+                                if (value == true) {
+                                  selectedFriends.add(friend.fId);
+                                } else {
+                                  selectedFriends.remove(friend.fId);
+                                }
+                              });
+                            },
+                          );
+                        }).toList(),
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 30),
                   Center(
                     child: ElevatedButton(
                       onPressed: () {
@@ -167,8 +182,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                             context,
                             groupName.text,
                             type!,
+                            selectedFriends,
                           );
-
                         }
                       },
                       style: ElevatedButton.styleFrom(
@@ -176,7 +191,7 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                         padding: const EdgeInsets.symmetric(
                           horizontal: 50,
                           vertical: 20,
-                        ), // Increase the size
+                        ),
                         textStyle: const TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.bold,
@@ -207,40 +222,10 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
       label: Text(label),
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.white,
-        foregroundColor: Colors.black, // Text color
+        foregroundColor: Colors.black,
       ),
     );
   }
-
-  // void _showSaveConfirmationDialog(BuildContext context) {
-  //   showDialog(
-  //     context: context,
-  //     builder: (BuildContext context) {
-  //       return AlertDialog(
-  //         title: const Text(
-  //           'Success',
-  //           style: TextStyle(fontWeight: FontWeight.bold),
-  //         ),
-  //         content: const Text('New group created successfully.'),
-  //         actions: <Widget>[
-  //           TextButton(
-  //             onPressed: () {
-  //               Navigator.of(context).pop();
-  //               Navigator.of(context).pop(); // Close the dialog
-  //             },
-  //             child: const Text(
-  //               'OK',
-  //               style: TextStyle(
-  //                   fontWeight: FontWeight.bold,
-  //                   fontSize: 18,
-  //                   color: Colors.black),
-  //             ),
-  //           ),
-  //         ],
-  //       );
-  //     },
-  //   );
-  // }
 
   void _showCancelConfirmationDialog(BuildContext context) {
     showDialog(
@@ -254,14 +239,14 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
           actions: <Widget>[
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
               },
               child: const Text('No'),
             ),
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop(); // Close the dialog
-                Navigator.of(context).pop(); // Close the CreateGroupScreen
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
               child: const Text('Yes'),
             ),
@@ -271,8 +256,8 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
     );
   }
 
-  void _showAddGroupConfirmationDialog(
-      BuildContext context, String groupName, String type) {
+  void _showAddGroupConfirmationDialog(BuildContext context, String groupName,
+      String type, List<String> selectedFriends) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -290,12 +275,13 @@ class _CreateGroupScreenState extends State<CreateGroupScreen> {
                   groupId: groupId.toString(),
                   groupName: groupName,
                   groupType: type,
+                  friends: selectedFriends, // Corrected parameter name
                 );
                 context
                     .read<FriendsProvider>()
                     .setFirebaseGroupData(groupModel);
-                Navigator.of(context).pop(); // Close the dialog
-                Navigator.of(context).pop(); // Close the dialog
+                Navigator.of(context).pop();
+                Navigator.of(context).pop();
               },
               child: const Text(
                 'OK',

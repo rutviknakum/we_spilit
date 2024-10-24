@@ -17,10 +17,23 @@ class _AccountScreenState extends State<AccountScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final userCredentials =
-        FirebaseAuth.instance.currentUser?.email ?? 'Unknown User';
-
     return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          'Account Screen',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        backgroundColor: Colors.white,
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.account_circle),
+            iconSize: 40,
+            onPressed: () {
+              _showPopupMenu(context);
+            },
+          ),
+        ],
+      ),
       body: Stack(
         fit: StackFit.expand,
         children: [
@@ -33,35 +46,6 @@ class _AccountScreenState extends State<AccountScreen> {
             child: SingleChildScrollView(
               child: Column(
                 children: [
-                  const Padding(
-                    padding: EdgeInsets.symmetric(vertical: 24.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'Account',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 10),
-                    child: Text(
-                      'Logged in as: $userCredentials',
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                      ),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis,
-                    ),
-                  ),
                   _buildListTile(
                     context,
                     index: 0,
@@ -260,22 +244,18 @@ class _AccountScreenState extends State<AccountScreen> {
       },
     );
   }
-}
 
-class UserCredentials {
-  static final UserCredentials _instance = UserCredentials._internal();
-
-  String? _credentials;
-
-  factory UserCredentials() {
-    return _instance;
+  // Function to show popup near account icon
+  void _showPopupMenu(BuildContext context) {
+    showMenu(
+      context: context,
+      position: RelativeRect.fromLTRB(100, 50, 0, 0), // Adjust the position
+      items: [
+        PopupMenuItem(
+          child: Text(
+              'Logged in as: ${FirebaseAuth.instance.currentUser?.email ?? 'Unknown User'}'),
+        ),
+      ],
+    );
   }
-
-  UserCredentials._internal();
-
-  void setCredentials(String credentials) {
-    _credentials = credentials;
-  }
-
-  String? get credentials => _credentials;
 }
